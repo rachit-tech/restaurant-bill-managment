@@ -1,1 +1,2 @@
 # restaurant-bill-managment
+A restaurant billing system project in C is typically a console-based application designed to manage menu items, process customer orders, calculate the total bill (often including tax like GST), and generate a final receipt. The project utilizes core C programming concepts such as variables, control structures (loops and conditional statements), functions, structures, and file handling.
