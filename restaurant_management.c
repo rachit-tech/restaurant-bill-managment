@@ -1,95 +1,64 @@
+/* ===========Bean Me Up Cafe=============*/
 #include <stdio.h>
-#include <conio.h>
-#include <string.h>
-#include <time.h> 
-
-
-struct MenuItem {
-    int id;
-    char name[50];
-    float price;
-};
-
-struct OrderItem {
-    int id;
-    int quantity;
-    float subtotal;
-};
-
-void displayMenu();
-float placeOrder();
 
 int main() {
-    float totalBill = placeOrder();
-    printf("\n\n--------------------------------------\n");
-    printf("   Total Amount Payable: $%.2f\n", totalBill);
-    printf("--------------------------------------\n");
-    getch();
-    return 0;
-}
-
-void displayMenu() {
-    
-    struct MenuItem menu[3] = {
-        {1, "Burger", 5.99},
-        {2, "Pizza", 12.50},
-        {3, "Soda", 1.99}
-    };
-
-    printf("\n--- RESTAURANT MENU ---\n");
-    printf("ID\tName\t\tPrice\n");
-    for (int i = 0; i < 3; i++) {
-        printf("%d\t%s\t\t$%.2f\n", menu[i].id, menu[i].name, menu[i].price);
-    }
-    printf("-----------------------\n");
-}
-
-float placeOrder() {
     int choice, quantity;
-    float total = 0;
-    char addMore = 'y';
-    FILE *fp;
-    time_t t;
-    time(&t); 
+    float price = 0, subtotal = 0, total = 0;
+    float gstRate = 0.18, gstAmount, grandTotal;
+    char customerName[50];
 
+    printf("--- 2026 RESTAURANT BILLING SYSTEM ---\n");
+    printf("Enter Customer Name: ");
+    scanf(" %[^\n]", customerName);
 
-    fp = fopen("receipt.txt", "w");
-    if (fp == NULL) {
-        printf("Error opening file!\n");
-        return 0;
-    }
-
-    fprintf(fp, "--- Restaurant Receipt ---\n");
-    fprintf(fp, "Date: %s\n", ctime(&t));
-    fprintf(fp, "Item\tQty\tAmount\n");
-
-    while (addMore == 'y' || addMore == 'Y') {
-        displayMenu();
-        printf("Enter the ID of the item you want to order: ");
+    while (1) {
+        printf("\nMENU:\n");
+        printf("1. Burger   - $5.00\n");
+        printf("2. Pizza    - $12.00\n");
+        printf("3. Pasta    - $8.50\n");
+        printf("4. Soda     - $2.00\n");
+        printf("5. Finalize Bill\n");
+        printf("Select an option (1-5): ");
         scanf("%d", &choice);
-        printf("Enter quantity: ");
+
+        if (choice == 5)
+            break;
+
+        if (choice < 1 || choice > 5) {
+            printf("Invalid choice! Try again.\n");
+            continue;
+        }
+
+        printf("Enter Quantity: ");
         scanf("%d", &quantity);
 
+        switch (choice) {
+            case 1: price = 5.00; break;
+            case 2: price = 12.00; break;
+            case 3: price = 8.50; break;
+            case 4: price = 2.00; break;
+        }
 
-        float itemPrice = 0;
-        if (choice == 1) itemPrice = 5.99;
-        else if (choice == 2) itemPrice = 12.50;
-        else if (choice == 3) itemPrice = 1.99;
+        subtotal = price * quantity;
+        total += subtotal;
 
-        float itemTotal = itemPrice * quantity;
-        total += itemTotal;
-
-        
-        fprintf(fp, "%d\t%d\t$%.2f\n", choice, quantity, itemTotal);
-
-        printf("Do you want to add more items? (y/n): ");
-        scanf(" %c", &addMore);
+        printf("Item Total: $%.2f\n", subtotal);
     }
 
-    fprintf(fp, "--------------------------\n");
-    fprintf(fp, "Total: $%.2f\n", total);
-    fclose(fp);
+    gstAmount = total * gstRate;
+    grandTotal = total + gstAmount;
 
-    printf("\nOrder placed successfully. Receipt generated in receipt.txt\n");
-    return total;
+    // Final Bill
+    printf("\n====================================");
+    printf("\n       OFFICIAL INVOICE - 2026       ");
+    printf("\n====================================");
+    printf("\nCustomer Name : %s", customerName);
+    printf("\nSubtotal      : $%.2f", total);
+    printf("\nGST (18%%)     : $%.2f", gstAmount);
+    printf("\n------------------------------------");
+    printf("\nGRAND TOTAL   : $%.2f", grandTotal);
+    printf("\n------------------------------------");
+    printf("\n   Thank you for your visit!         \n");
+
+    return 0;
 }
